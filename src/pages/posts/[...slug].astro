@@ -1,0 +1,36 @@
+---
+import '../../styles/markdown.css';
+
+import {getCollection} from 'astro:content';
+// 1. Generate a new path for every collection entry
+export async function getStaticPaths() {
+    const blogEntries = await getCollection('blog');
+    return blogEntries.map(entry => ({
+        params: {slug: entry.slug}, props: {entry},
+    }));
+}
+const {entry} = Astro.props;
+const {Content} = await entry.render();
+---
+
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="description" content="Astro description"/>
+    <meta name="viewport" content="width=device-width"/>
+    <title>{entry.data.title}</title>
+</head>
+
+<body>
+
+<main>
+    <h1>{entry.data.title}</h1>
+    {entry.data.date && <p><i>Date: {entry.data.date}</i></p>}
+    <hr/>
+    <Content/>
+</main>
+
+</body>
+</html>
+
+
